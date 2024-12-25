@@ -28,6 +28,47 @@ logging.basicConfig(
 
 
 # =======================================================================================
+# JSON (Loads & Dumps)
+# =======================================================================================
+
+
+class JSON:
+    """JSON (Deserialize & Serialize)"""
+
+    @staticmethod
+    def loads(string: str) -> typing.Any:
+        """
+        Safely `deserialize` a JSON string into a Python object.
+
+        Args:
+            json_string (str): A JSON-formatted string.
+
+        Returns:
+            Any: The `deserialized` Python object.
+        """
+        try:
+            return json.loads(string)
+        except json.JSONDecodeError:
+            return {}
+
+    @staticmethod
+    def dumps(data: typing.Any) -> bytes:
+        """
+        Safely `serialize` a Python object into a JSON-formatted `UTF-8` encoded string.
+
+        Args:
+            data (Any): The Python object to serialize.
+
+        Returns:
+            bytes: The `serialized` JSON string encoded in `UTF-8`.
+        """
+        try:
+            return json.dumps(data).encode("utf-8")
+        except TypeError:
+            return b"{}"
+
+
+# =======================================================================================
 # Scalars
 # =======================================================================================
 
@@ -175,26 +216,29 @@ class HTTPRequest:
 
     def response(
         self,
-        data: str | int | list | dict | None = None,
+        data: typing.Any = None,
         status_code: int = 200,
         content_type: str = "application/json",
     ):
         """Send http `response`."""
+        # Send `status_code`
         self.http.send_response(status_code)
+        # Send `headers`
         self.http.send_header("Content-Type", content_type)
-        self.http.send_header("Connection", "close")
-        self.http.end_headers()
-        self.http.wfile.write(
-            (data if isinstance(data, str) else json.dumps(data)).encode("utf-8")
-        )
+        self.http.send_header("Connection", "close")  # Close connection
+        self.http.end_headers()  # Flush headers
+        # Send `data`
+        self.http.wfile.write(data)
 
-    def inputs(self):
+    def get_input(self):
         """Read http `request`."""
-        return (
-            self.http.rfile.read(self.content_length).decode("utf-8")
-            if self.content_length > 0
-            else None
-        )
+        if self.content_length > 0:
+            return self.http.rfile.read(self.content_length).decode("utf-8")
+        return None
+
+    def input(self):
+        """Read http `request` as `JSON`."""
+        return JSON.loads(self.get_input())
 
 
 class HTTPHandler(BaseHTTPRequestHandler):
@@ -203,10 +247,13 @@ class HTTPHandler(BaseHTTPRequestHandler):
     def _handle_http(self, method):
         """Handle data for {Get|Post|Put|Delete|Patch} requests."""
         request = HTTPRequest(self, method)
+
+        inputs = request.input()
         # {GET | POST | PUT | DELETE | PATCH}
-        inputs = request.inputs()
+        print(type(inputs), inputs)
+
         # Return
-        request.response({"input": inputs})
+        request.response(JSON.dumps({"input": inputs}))
 
     def do_OPTIONS(self):  # pylint: disable=invalid-name
         """Handle `OPTIONS` request."""
@@ -218,7 +265,7 @@ class HTTPHandler(BaseHTTPRequestHandler):
         """Handle `GET` request."""
         request = HTTPRequest(self, "GET")
         html_template = "<html><body><h1>Hello, World!</h1></body></html>"
-        request.response(html_template, content_type="text/html")
+        request.response(html_template.encode("utf-8"), content_type="text/html")
 
     def do_POST(self):  # pylint: disable=invalid-name
         """Handle `POST` request."""
