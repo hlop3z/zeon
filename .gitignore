@@ -171,3 +171,5 @@ cython_debug/
 .pypirc
 
 .local_code/
+notebook/micropython/micropython.mjs
+notebook/micropython/micropython.wasm

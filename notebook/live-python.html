@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="./micropython/micropython.mjs" type="module"></script>
+  </head>
+
+  <body>
+    <textarea id="pythonCode" rows="10" style="width: 100%">
+import datetime
+formatted_date = datetime.date(2002, 12, 4).isoformat()
+print("Formatted date:", formatted_date)
+        </textarea
+    >
+    <br />
+    <button id="runCode">Run Python</button>
+    <pre id="output"></pre>
+
+    <script type="module">
+      const mp = await loadMicroPython();
+      document.getElementById("runCode").addEventListener("click", () => {
+        const code = document.getElementById("pythonCode").value;
+        try {
+          const result = mp.runPython(code);
+          document.getElementById("output").textContent =
+            result || "Code executed successfully.";
+        } catch (err) {
+          document.getElementById("output").textContent = `Error: ${err}`;
+        }
+      });
+    </script>
+  </body>
+</html>

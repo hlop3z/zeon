@@ -3,12 +3,12 @@ name = "zeon"
 version = "0.1.0"
 description = "Default template for PDM package"
 authors = [
-    {name = "hlop3z", email = "23062270+hlop3z@users.noreply.github.com"},
+    { name = "hlop3z", email = "23062270+hlop3z@users.noreply.github.com" },
 ]
 dependencies = []
 requires-python = ">=3.12"
 readme = "README.md"
-license = {text = "MIT"}
+license = { text = "MIT" }
 
 [build-system]
 requires = ["pdm-backend"]
@@ -22,6 +22,7 @@ distribution = true
 [tool.pdm.scripts]
 do = { shell = "cd scripts && python" }
 dev = { shell = "cd src/zeon && python __init__.py" }
+lab = { shell = "marimo edit" }
 
 [tool.pdm.build]
 # package-dir = "src"
@@ -29,6 +30,8 @@ includes = ["src"]
 excludes = ["tests"]
 
 
+[tool.pdm.dev-dependencies]
+notes = ["marimo>=0.10.8"]
 [dependency-groups]
 lint = [
     "mypy>=1.11.1",
