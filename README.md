@@ -13,3 +13,8 @@ curl -v http://localhost:8000
 ```sh
 curl -v http://localhost:8000 --json '{"name": "Alice", "age": 30}'
 ```
+
+## Modifiers
+
+- **`_`** => for `private` attribute
+- **`@`** => for `computed` attribute
