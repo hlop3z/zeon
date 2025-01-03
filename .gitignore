@@ -147,7 +147,6 @@ venv.bak/
 /site
 
 # mypy
-.mypy_cache/
 .dmypy.json
 dmypy.json
 
@@ -170,6 +169,8 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
-.local_code/
 notebook/micropython/micropython.mjs
 notebook/micropython/micropython.wasm
+
+# Shell-Scripts
+.ssh/

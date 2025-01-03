@@ -1,45 +1,16 @@
 [project]
 name = "zeon"
 version = "0.1.0"
-description = "Default template for PDM package"
-authors = [
-    { name = "hlop3z", email = "23062270+hlop3z@users.noreply.github.com" },
-]
-dependencies = []
-requires-python = ">=3.12"
+description = "Add your description here"
 readme = "README.md"
-license = { text = "MIT" }
+requires-python = ">=3.12"
+dependencies = [
+    "starlette>=0.45.1",
+    "uvicorn>=0.34.0",
+    "docker>=7.1.0",
+    "asyncssh>=2.19.0",
+]
 
 [build-system]
-requires = ["pdm-backend"]
-build-backend = "pdm.backend"
-
-
-[tool.pdm]
-distribution = true
-
-
-[tool.pdm.scripts]
-do = { shell = "cd scripts && python" }
-dev = { shell = "cd src/zeon && python __init__.py" }
-lab = { shell = "marimo edit" }
-
-[tool.pdm.build]
-# package-dir = "src"
-includes = ["src"]
-excludes = ["tests"]
-
-
-[tool.pdm.dev-dependencies]
-notes = ["marimo>=0.10.8"]
-[dependency-groups]
-lint = [
-    "mypy>=1.11.1",
-    "isort>=5.13.2",
-    "black>=24.8.0",
-    "pylint>=3.2.6",
-    "ruff>=0.6.2",
-    "bandit>=1.7.9",
-    "watchdog>=4.0.2",
-    "ssort>=0.13.0",
-]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
